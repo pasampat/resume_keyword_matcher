@@ -116,7 +116,7 @@ def save_results_csv(filename, match_percent, matched, missing):
 def prompt_filepath(prompt_message, default_path=None):
     while True:
         if default_path:
-            path = input(f"{prompt_message} [Press Enter to use the sample file: {default_path}]: ").strip()
+            path = input(f"{prompt_message} [Press Enter for {default_path}]: ").strip()
             if path == "":
                 path = default_path
         else:
@@ -143,8 +143,8 @@ if __name__ == "__main__":
     print("=== Resume Keyword Matcher ===\n")
 
     # Prompt for job description and resume file paths
-    job_path = prompt_filepath("Enter path to job description (.txt or .pdf)", "test_files/resume1.txt")
-    resume_path = prompt_filepath("Enter path to resume (.txt or .pdf)", "test_files/job1.txt")
+    job_path = prompt_filepath("Enter path to job description (.txt or .pdf)", "test_files/sample_job.txt")
+    resume_path = prompt_filepath("Enter path to resume (.txt or .pdf)", "test_files/sample_resume.txt")
 
     # 1. Read and clean job description
     job_text = read_file(job_path)

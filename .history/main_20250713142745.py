@@ -116,7 +116,7 @@ def save_results_csv(filename, match_percent, matched, missing):
 def prompt_filepath(prompt_message, default_path=None):
     while True:
         if default_path:
-            path = input(f"{prompt_message} [Press Enter to use the sample file: {default_path}]: ").strip()
+            path = input(f"{prompt_message} [Press Enter for {default_path}]: ").strip()
             if path == "":
                 path = default_path
         else:

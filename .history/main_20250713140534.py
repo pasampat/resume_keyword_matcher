@@ -11,14 +11,14 @@ from stopwords import STOP_WORDS
 def read_file(filepath):
     """
     Reads and returns the text from a .txt or .pdf file.
-    Handles errors and unsupported types gracefully.
     """
+    # Get file extension
     _, ext = os.path.splitext(filepath)
     ext = ext.lower()
     
     if ext == '.txt':
         try:
-            # If text, it will open it
+            #if text it will open it
             with open(filepath, 'r', encoding='utf-8') as f:
                 text = f.read()
             return text
@@ -30,7 +30,7 @@ def read_file(filepath):
         try:
             reader = PdfReader(filepath)
             text = ""
-            # Extracts text for pdf
+            #extracts for pdf
             for page in reader.pages:
                 page_text = page.extract_text()
                 if page_text:
@@ -84,81 +84,36 @@ def calculate_match_percent(matched, total):
         return 0.0
     return 100 * len(matched) / total
 
+
 def save_results_txt(filename, match_percent, matched, missing):
-    """
-    Saves results as a human-readable .txt file.
-    """
-    try:
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(f"Match Percent: {match_percent:.1f}%\n\n")
-            f.write(f"Matched Keywords ({len(matched)}):\n")
-            f.write(", ".join(sorted(list(matched))) + "\n\n")
-            f.write(f"Missing Keywords ({len(missing)}):\n")
-            f.write(", ".join(sorted(list(missing))) + "\n")
-    except Exception as e:
-        print(f"Error saving TXT file: {e}")
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(f"Match Percent: {match_percent:.1f}%\n\n")
+        f.write(f"Matched Keywords ({len(matched)}):\n")
+        f.write(", ".join(sorted(list(matched))) + "\n\n")
+        f.write(f"Missing Keywords ({len(missing)}):\n")
+        f.write(", ".join(sorted(list(missing))) + "\n")
 
 def save_results_csv(filename, match_percent, matched, missing):
-    """
-    Saves results as a .csv file.
-    """
-    try:
-        with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(['Match Percent', f"{match_percent:.1f}%"])
-            writer.writerow([])
-            writer.writerow(['Matched Keywords'] + list(sorted(matched)))
-            writer.writerow([])
-            writer.writerow(['Missing Keywords'] + list(sorted(missing)))
-    except Exception as e:
-        print(f"Error saving CSV file: {e}")
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Match Percent', f"{match_percent:.1f}%"])
+        writer.writerow([])
+        writer.writerow(['Matched Keywords'] + list(sorted(matched)))
+        writer.writerow([])
+        writer.writerow(['Missing Keywords'] + list(sorted(missing)))
 
-def prompt_filepath(prompt_message, default_path=None):
-    while True:
-        if default_path:
-            path = input(f"{prompt_message} [Press Enter to use the sample file: {default_path}]: ").strip()
-            if path == "":
-                path = default_path
-        else:
-            path = input(prompt_message).strip()
-        if not os.path.isfile(path):
-            print("File does not exist. Please try again.")
-        elif not path.lower().endswith(('.txt', '.pdf')):
-            print("File must be .txt or .pdf. Please try again.")
-        else:
-            return path
 
-def prompt_save_format():
-    """
-    Prompt user for save format, accept only valid choices.
-    """
-    valid_choices = {"none", "txt", "csv"}
-    while True:
-        choice = input("\nSave results? (none/txt/csv): ").strip().lower()
-        if choice in valid_choices:
-            return choice
-        print("Invalid choice. Please enter 'none', 'txt', or 'csv'.")
 
 if __name__ == "__main__":
-    print("=== Resume Keyword Matcher ===\n")
-
-    # Prompt for job description and resume file paths
-    job_path = prompt_filepath("Enter path to job description (.txt or .pdf)", "test_files/resume1.txt")
-    resume_path = prompt_filepath("Enter path to resume (.txt or .pdf)", "test_files/job1.txt")
-
     # 1. Read and clean job description
+    job_path = "test_files/job1.txt"  # or job1.pdf
     job_text = read_file(job_path)
-    if not job_text:
-        print("Could not read job description. Exiting.")
-        exit()
     job_cleaned = clean_text(job_text, STOP_WORDS)
     job_keywords = extract_keywords(job_cleaned)
 
     # 2. Read and clean resume
+    resume_path = "test_files/resume1.txt"  # or resume1.pdf
     resume_text = read_file(resume_path)
-    if not resume_text:
-        print("Could not read resume. Exiting.")
-        exit()
     resume_cleaned = clean_text(resume_text, STOP_WORDS)
 
     # 3. Match
@@ -166,13 +121,12 @@ if __name__ == "__main__":
     match_percent = calculate_match_percent(matched, len(job_keywords))
 
     # 4. Print Results
-    print(f"\n=== RESULTS ===")
-    print(f"Match Percent: {match_percent:.1f}%")
-    print(f"\nMatched keywords ({len(matched)}):\n{sorted(list(matched))}")
-    print(f"\nMissing keywords ({len(missing)}):\n{sorted(list(missing))}")
+    print(f"\nMATCH PERCENT: {match_percent:.1f}%")
+    print(f"\nMatched keywords ({len(matched)}): {sorted(list(matched))}")
+    print(f"\nMissing keywords ({len(missing)}): {sorted(list(missing))}")
 
-    # 5. Offer to save results in txt/csv
-    save_choice = prompt_save_format()
+    
+    save_choice = input("\nSave results? (none/txt/csv): ").strip().lower()
     if save_choice == "txt":
         filename = input("Enter filename (e.g., output.txt): ").strip()
         save_results_txt(filename, match_percent, matched, missing)
@@ -183,4 +137,3 @@ if __name__ == "__main__":
         print(f"Results saved to {filename}")
     else:
         print("Results not saved to file.")
-
