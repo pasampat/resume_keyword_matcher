@@ -1,3 +1,4 @@
+# main.py
 import os
 import re
 import string
@@ -40,6 +41,7 @@ DEFAULT_RESUMES = [
     "test_files/resume2.txt",
     "test_files/resume3.txt"
 ]
+
 
 
 if __name__ == "__main__":

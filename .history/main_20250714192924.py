@@ -1,10 +1,6 @@
 import os
-import re
-import string
 import collections
-import csv
 from PyPDF2 import PdfReader  # Install with: pip install PyPDF2
-
 import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')

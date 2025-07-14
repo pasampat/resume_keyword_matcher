@@ -1,35 +1,24 @@
-Sample Job Description
+Software Engineer – Data & Automation
 
-Job Title: Human Resources Assistant
+We are seeking a Software Engineer to join our Data & Automation team. The ideal candidate will be passionate about building scalable tools and has a strong background in software development and data analysis.
 
-Job Description: This position reports to the Human Resources (HR) director and
-interfaces with company managers and HR staff. Company XYZ is
-committed to an employee-orientated, high performance culture that
-emphasizes empowerment, quality, continuous improvement, and the
-recruitment and ongoing development of a superior workforce.
+Responsibilities:
+- Develop and maintain automation scripts and data processing pipelines using Python.
+- Integrate RESTful APIs and work with SQL databases to store, retrieve, and analyze data.
+- Collaborate with data scientists and business analysts to design robust ETL workflows.
+- Participate in code reviews, agile ceremonies, and continuous integration/deployment.
+- Optimize system performance and troubleshoot issues as they arise.
 
-The intern will gain exposure
-to these functional areas: HR Information Systems; Employee relations; Training and development;
-Benefits; Compensation; Organization development; Employment
+Requirements:
+- Proficiency in Python, SQL, and Git.
+- Experience with REST APIs, Pandas, and cloud platforms (AWS preferred).
+- Strong understanding of data structures, algorithms, and problem-solving.
+- Excellent communication and teamwork skills.
+- Bachelor’s degree in Computer Science or related field.
 
-Specific responsibilities: - Employee orientation and training logistics and recordkeeping
-- Company-wide committee facilitation and participation
-- Employee safety, welfare, wellness and health reporting
-- Provide direct support to employees during implementation of HR
-services, policies and programs
+Preferred Qualifications:
+- Experience with Docker or other containerization tools.
+- Familiarity with Spark or big data frameworks.
+- Exposure to machine learning or statistical analysis.
 
-
-
-What skills will the
-intern learn: 
-- Active participation in strategic planning process, including
- developing goals, objectives and processes
-- How to engage professionally in HR meetings and seminars with
-other HR professionals in the region
-- Gain experience with Human Resources Information system (HRIS)
-database management and record keeping
-- Application of HR law and compliance with governmental regulations
-Qualifications: - Proficient with Microsoft Word and Excel
-- General knowledge of employment law and practices
-- Able to maintain a high level of confidentiality
-- Effective oral and written management communication skills
+If you are eager to work in a fast-paced environment and want to make an impact with innovative data solutions, we would love to hear from you!

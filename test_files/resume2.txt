@@ -1,0 +1,30 @@
+Asha Patel
+ashapatel@email.com | (404) 123-9876 | Athens, GA
+
+Education
+Bachelor of Science, Information Systems, Georgia Tech
+Graduated: May 2025
+
+Technical Skills
+- Programming: Python, R, SQL
+- Data Processing: Pandas, ETL pipelines, Tableau
+- Tools: Git, Bash, Jupyter, Excel
+- APIs: Consumed RESTful APIs for data integration
+- Cloud: Familiarity with AWS S3, Azure
+
+Professional Experience
+Data Analyst, Retail Insights Group
+June 2024 – Present
+- Developed Python scripts to automate sales reporting and inventory management.
+- Designed data pipelines to collect, clean, and load retail sales data into SQL databases.
+- Integrated external REST APIs to enrich internal analytics datasets.
+- Produced dashboards for business analysts using Tableau and Pandas.
+- Participated in cross-team agile meetings and code reviews.
+
+Projects
+- Built an ETL pipeline for monthly sales forecasting using Python and SQL.
+- Automated web data collection with Python and REST APIs.
+
+Additional
+- Strong written and verbal communication skills.
+- Team-oriented and experienced with collaborative workflows.

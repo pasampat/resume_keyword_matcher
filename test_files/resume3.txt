@@ -1,0 +1,30 @@
+Michael Evans
+m.evans@email.com | (678) 555-4321 | Atlanta, GA
+
+Education
+Bachelor of Science in Computer Engineering, Georgia State University
+Graduated: May 2023
+
+Technical Skills
+- Programming: Python, Bash, Groovy
+- Cloud Platforms: AWS (EC2, S3, Lambda), Docker, Kubernetes
+- Automation: CI/CD pipelines, Jenkins, Terraform
+- Databases: MySQL, DynamoDB
+- Tools: Git, Linux, Monitoring (Datadog, CloudWatch)
+
+Work Experience
+Cloud DevOps Engineer, SecureCom Solutions
+August 2023 – Present
+- Automated deployment and monitoring of AWS infrastructure using Python and Terraform.
+- Maintained and optimized Docker containers for scalable web services.
+- Built CI/CD pipelines to streamline integration and deployment processes.
+- Collaborated with development teams to troubleshoot system performance issues.
+- Conducted code reviews and implemented automation scripts for security and compliance.
+
+Projects
+- Migrated data pipelines to AWS cloud for improved reliability.
+- Deployed RESTful microservices on Docker and Kubernetes.
+
+Soft Skills
+- Strong problem-solving and troubleshooting abilities.
+- Experience working in fast-paced, collaborative environments.
