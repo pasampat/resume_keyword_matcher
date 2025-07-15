@@ -103,17 +103,7 @@ def save_single_result(result, job_word_counts):
         filename = input(f"Enter filename (e.g., output.{save_choice}): ").strip()
         if not filename.startswith("output/"):
             filename = os.path.join("output", filename)
-        # Add extension if missing
-        if save_choice == "txt" and not filename.endswith(".txt"):
-            filename += ".txt"
-        elif save_choice == "csv" and not filename.endswith(".csv"):
-            filename += ".csv"
-        # Check for overwrite
-        if os.path.exists(filename):
-            confirm = input(f"{filename} exists. Overwrite? (y/n): ").strip().lower()
-            if confirm != 'y':
-                print("Save cancelled.")
-                return
+            
         if save_choice == "txt":
             save_results_txt(filename, result["match_percent"], result["matched"], result["missing"], job_word_counts)
         else:
@@ -123,21 +113,13 @@ def save_single_result(result, job_word_counts):
         print("Results not saved to file.")
 
 def save_all_results(valid_results, all_keywords, job_word_counts, header):
-    save_choice = prompt_save_format()
+    save_choice = prompt_save_format()  # <<== USE PROMPT HERE
     if save_choice == "txt":
         filename = input("Enter filename (e.g., output.txt): ").strip()
         if not filename.startswith("output/"):
             filename = os.path.join("output", filename)
-        # Add extension if missing
-        if not filename.endswith(".txt"):
-            filename += ".txt"
-        # Check for overwrite
-        if os.path.exists(filename):
-            confirm = input(f"{filename} exists. Overwrite? (y/n): ").strip().lower()
-            if confirm != 'y':
-                print("Save cancelled.")
-                return
         with open(filename, 'w', encoding='utf-8') as f:
+            # Write summary
             f.write("=== SUMMARY ===\n")
             f.write(f"{'Resume File':<28} {'Match %':>8} {'#Matched':>10} {'#Missing':>10}\n")
             f.write("-" * 60 + "\n")
@@ -156,17 +138,9 @@ def save_all_results(valid_results, all_keywords, job_word_counts, header):
         filename = input("Enter filename (e.g., output.csv): ").strip()
         if not filename.startswith("output/"):
             filename = os.path.join("output", filename)
-        # Add extension if missing
-        if not filename.endswith(".csv"):
-            filename += ".csv"
-        # Check for overwrite
-        if os.path.exists(filename):
-            confirm = input(f"{filename} exists. Overwrite? (y/n): ").strip().lower()
-            if confirm != 'y':
-                print("Save cancelled.")
-                return
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
+            # Write summary
             writer.writerow(["=== SUMMARY ==="])
             writer.writerow(['Resume File', 'Match %', '#Matched', '#Missing'])
             for r in valid_results:
@@ -188,7 +162,6 @@ def save_all_results(valid_results, all_keywords, job_word_counts, header):
         print(f"Results saved to {filename}")
     else:
         print("Results not saved to file.")
-
 
 def main():
     print_intro()
