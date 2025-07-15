@@ -65,11 +65,11 @@ def process_job_description(job_path):
             break
         print("Invalid input. Please enter 1 or 2.")
 
-    if mode == "2":
-        job_cleaned = extract_nouns_verbs(job_cleaned)
-        print("(Extracting only nouns and verbs as keywords.)")
-    else:
-        print("(Using all cleaned words as keywords.)")
+        if mode == "2":
+            job_cleaned = extract_nouns_verbs(job_cleaned)
+            print("(Extracting only nouns and verbs as keywords.)")
+        else:
+            print("(Using all cleaned words as keywords.)")
 
     job_keywords = extract_keywords(job_cleaned)
     job_word_counts = collections.Counter(job_cleaned)
@@ -161,6 +161,7 @@ def save_all_results(valid_results, all_keywords, job_word_counts, header):
         print(f"Results saved to {filename}")
     else:
         print("Results not saved to file.")
+
 
 def main():
     print_intro()

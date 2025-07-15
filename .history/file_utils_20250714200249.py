@@ -116,6 +116,8 @@ def prompt_save_format():
         print("Invalid choice. Please enter 'none', 'txt', or 'csv'.")
 
 
+
+
 def save_summary_csv(filename, summary_rows):
     try:
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:

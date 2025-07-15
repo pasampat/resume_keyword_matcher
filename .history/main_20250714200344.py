@@ -65,11 +65,11 @@ def process_job_description(job_path):
             break
         print("Invalid input. Please enter 1 or 2.")
 
-    if mode == "2":
-        job_cleaned = extract_nouns_verbs(job_cleaned)
-        print("(Extracting only nouns and verbs as keywords.)")
-    else:
-        print("(Using all cleaned words as keywords.)")
+        if mode == "2":
+            job_cleaned = extract_nouns_verbs(job_cleaned)
+            print("(Extracting only nouns and verbs as keywords.)")
+        else:
+            print("(Using all cleaned words as keywords.)")
 
     job_keywords = extract_keywords(job_cleaned)
     job_word_counts = collections.Counter(job_cleaned)
@@ -97,70 +97,6 @@ def process_resumes(resume_paths, job_keywords, job_word_counts):
         })
     return valid_results
 
-def save_single_result(result, job_word_counts):
-    save_choice = prompt_save_format()
-    if save_choice in ("txt", "csv"):
-        filename = input(f"Enter filename (e.g., output.{save_choice}): ").strip()
-        if not filename.startswith("output/"):
-            filename = os.path.join("output", filename)
-        if save_choice == "txt":
-            save_results_txt(filename, result["match_percent"], result["matched"], result["missing"], job_word_counts)
-        else:
-            save_results_csv(filename, result["match_percent"], result["matched"], result["missing"], job_word_counts)
-        print(f"Results saved to {filename}")
-    else:
-        print("Results not saved to file.")
-
-def save_all_results(valid_results, all_keywords, job_word_counts, header):
-    save_choice = prompt_save_format()  # <<== USE PROMPT HERE
-    if save_choice == "txt":
-        filename = input("Enter filename (e.g., output.txt): ").strip()
-        if not filename.startswith("output/"):
-            filename = os.path.join("output", filename)
-        with open(filename, 'w', encoding='utf-8') as f:
-            # Write summary
-            f.write("=== SUMMARY ===\n")
-            f.write(f"{'Resume File':<28} {'Match %':>8} {'#Matched':>10} {'#Missing':>10}\n")
-            f.write("-" * 60 + "\n")
-            for r in valid_results:
-                f.write(f"{os.path.basename(r['resume_path']):<28} {r['match_percent']:>8.1f} {r['num_matched']:>10} {r['num_missing']:>10}\n")
-            f.write("\n=== KEYWORD COMPARISON ===\n")
-            f.write(" | ".join(f"{col:<15}" for col in header) + "\n")
-            f.write("-" * (18 * len(header)) + "\n")
-            for word in all_keywords:
-                row = [f"{word:<15}"]
-                for r in valid_results:
-                    row.append(f"{r['resume_counts'].get(word, 0):<15}")
-                f.write(" | ".join(row) + "\n")
-        print(f"Results saved to {filename}")
-    elif save_choice == "csv":
-        filename = input("Enter filename (e.g., output.csv): ").strip()
-        if not filename.startswith("output/"):
-            filename = os.path.join("output", filename)
-        with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile)
-            # Write summary
-            writer.writerow(["=== SUMMARY ==="])
-            writer.writerow(['Resume File', 'Match %', '#Matched', '#Missing'])
-            for r in valid_results:
-                writer.writerow([
-                    os.path.basename(r["resume_path"]),
-                    f"{r['match_percent']:.1f}",
-                    r["num_matched"],
-                    r["num_missing"]
-                ])
-            writer.writerow([])
-            writer.writerow(["=== KEYWORD COMPARISON ==="])
-            row_header = ["Keyword"] + [os.path.basename(r['resume_path']) for r in valid_results]
-            writer.writerow(row_header)
-            for word in all_keywords:
-                row = [word]
-                for r in valid_results:
-                    row.append(r['resume_counts'].get(word, 0))
-                writer.writerow(row)
-        print(f"Results saved to {filename}")
-    else:
-        print("Results not saved to file.")
 
 def main():
     print_intro()

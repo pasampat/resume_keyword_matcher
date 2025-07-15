@@ -69,7 +69,7 @@ def process_job_description(job_path):
         job_cleaned = extract_nouns_verbs(job_cleaned)
         print("(Extracting only nouns and verbs as keywords.)")
     else:
-        print("(Using all cleaned words as keywords.)")
+            print("(Using all cleaned words as keywords.)")
 
     job_keywords = extract_keywords(job_cleaned)
     job_word_counts = collections.Counter(job_cleaned)

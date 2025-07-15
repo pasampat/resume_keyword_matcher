@@ -1,0 +1,88 @@
+Match Percent: 32.9%
+
+Matched Keywords (26):
+Keyword               Frequency in JD
+------------------------------------
+science                             1
+skills                              1
+tools                               2
+computer                            1
+platforms                           1
+troubleshoot                        1
+performance                         1
+engineer                            2
+data                                9
+issues                              1
+problemsolving                      1
+scripts                             1
+docker                              1
+experience                          2
+development                         1
+automation                          3
+pipelines                           1
+work                                2
+system                              1
+cloud                               1
+aws                                 1
+using                               1
+fastpaced                           1
+databases                           1
+reviews                             1
+solutions                           1
+
+Missing Keywords (53):
+Keyword               Frequency in JD
+------------------------------------
+pandas                              1
+structures                          1
+design                              1
+processing                          1
+arise                               1
+team                                1
+scientists                          1
+candidate                           1
+etl                                 1
+qualifications                      1
+join                                1
+participate                         1
+background                          1
+communication                       1
+business                            1
+hear                                1
+integrate                           1
+familiarity                         1
+building                            1
+frameworks                          1
+analysts                            1
+responsibilities                    1
+degree                              1
+develop                             1
+analysis                            2
+optimize                            1
+teamwork                            1
+machine                             1
+understanding                       1
+proficiency                         1
+ideal                               1
+preferred                           1
+love                                1
+apis                                1
+make                                1
+spark                               1
+algorithms                          1
+analyze                             1
+software                            3
+ceremonies                          1
+impact                              1
+learning                            1
+containerization                    1
+seeking                             1
+workflows                           1
+passionate                          1
+requirements                        1
+environment                         1
+field                               1
+sql                                 1
+exposure                            1
+collaborate                         1
+rest                                1
