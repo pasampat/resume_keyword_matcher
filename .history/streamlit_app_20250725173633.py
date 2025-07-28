@@ -83,19 +83,30 @@ if st.button("Analyze"):
         for f in resume_files:
             resume_text = read_uploaded_file(f)
             with st.expander(f"Resume: {f.name}"):
-                st.text(resume_text if len(resume_text) < 5000 else resume_text[:5000] + "\n...[truncated]")
-                matched, missing, match_percent, resume_counts = analyze_resume(resume_text, jd_keywords)
-                # Save for summary and matrix
-                summary_rows.append({
-                    "Resume": f.name,
-                    "Match %": f"{match_percent:.1f}",
-                    "#Matched": len(matched),
-                    "#Missing": len(missing)
-                })
-                resume_names.append(f.name)
-                resume_counts_list.append(resume_counts)
-                matched_missing_per_resume.append((matched, missing))
-                
+        st.text(resume_text if len(resume_text) < 5000 else resume_text[:5000] + "\n...[truncated]")
+        matched, missing, match_percent, resume_counts = analyze_resume(resume_text, jd_keywords)
+        # Save for summary and matrix
+        summary_rows.append({
+            "Resume": f.name,
+            "Match %": f"{match_percent:.1f}",
+            "#Matched": len(matched),
+            "#Missing": len(missing)
+        })
+        resume_names.append(f.name)
+        resume_counts_list.append(resume_counts)
+        matched_missing_per_resume.append((matched, missing))
+        # Show matched/missing tables right here (not in another expander)
+        matched_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]} for w in sorted(matched, key=lambda x: (-jd_word_counts[x], x))]
+        missing_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]} for w in sorted(missing, key=lambda x: (-jd_word_counts[x], x))]
+        st.markdown("**Matched Keywords**")
+        st.table(matched_table if matched_table else [{"Keyword": "None", "Frequency in JD": "-"}])
+        st.markdown("**Missing Keywords**")
+        st.table(missing_table if missing_table else [{"Keyword": "None", "Frequency in JD": "-"}])
+
+
+
+
+
 
         # Show summary table
         st.markdown("### Resume Match Summary")

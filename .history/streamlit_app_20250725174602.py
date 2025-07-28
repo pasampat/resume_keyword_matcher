@@ -95,6 +95,7 @@ if st.button("Analyze"):
                 resume_names.append(f.name)
                 resume_counts_list.append(resume_counts)
                 matched_missing_per_resume.append((matched, missing))
+                # Details hidden in expander
                 
 
         # Show summary table

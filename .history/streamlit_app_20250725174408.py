@@ -95,7 +95,14 @@ if st.button("Analyze"):
                 resume_names.append(f.name)
                 resume_counts_list.append(resume_counts)
                 matched_missing_per_resume.append((matched, missing))
-                
+                # Details hidden in expander
+                with st.expander("Matched & Missing Keywords (click to expand)", expanded=False):
+                    matched_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]} for w in sorted(matched, key=lambda x: (-jd_word_counts[x], x))]
+                    missing_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]} for w in sorted(missing, key=lambda x: (-jd_word_counts[x], x))]
+                    st.markdown("**Matched Keywords**")
+                    st.table(matched_table if matched_table else [{"Keyword": "None", "Frequency in JD": "-"}])
+                    st.markdown("**Missing Keywords**")
+                    st.table(missing_table if missing_table else [{"Keyword": "None", "Frequency in JD": "-"}])
 
         # Show summary table
         st.markdown("### Resume Match Summary")
