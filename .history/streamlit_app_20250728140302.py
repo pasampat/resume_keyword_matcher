@@ -6,7 +6,7 @@ from stopwords import STOP_WORDS
 import collections
 import pandas as pd
 
-# ========== file reading helpers ==========
+# ========== FILE READING HELPERS ==========
 
 def read_uploaded_file(uploaded_file):
     """
