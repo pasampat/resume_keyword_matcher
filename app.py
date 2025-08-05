@@ -67,7 +67,7 @@ def analyze_resume(resume_text, jd_keywords):
 
 # ========== STREAMLIT APP UI ==========
 
-st.title("Resume Keyword Matcher")
+st.subheader("Resume Keyword Matcher")
 
 st.markdown("""
 Upload a job description and 1–3 resumes (PDF or TXT).
@@ -164,13 +164,13 @@ if st.button("Analyze"):
             matched_missing_per_resume.append((matched, missing))
 
         # --- SUMMARY TABLE ---
-        st.markdown("### Resume Match Summary")
+        st.markdown("##### Resume Match Summary")
         st.table(summary_rows)
 
         # --- MATCHED/MISSING DETAILS FOR EACH RESUME ---
         for idx, label in enumerate(resume_labels):
             matched, missing = matched_missing_per_resume[idx]
-            st.markdown(f"#### Matched & Missing Keywords for {label}")
+            st.markdown(f"##### Matched & Missing Keywords for {label}")
             with st.expander(f"View matched and missing keywords for {label}", expanded=False):
                 matched_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]}
                                  for w in sorted(matched, key=lambda x: (-jd_word_counts[x], x))]
@@ -192,7 +192,7 @@ if st.button("Analyze"):
         df = pd.DataFrame(data)
         for col in resume_labels:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
-        st.markdown("### Keyword Comparison Matrix")
+        st.markdown("##### Keyword Comparison Matrix")
         st.dataframe(df, use_container_width=True)
 
 # For devs/users: show reminder
