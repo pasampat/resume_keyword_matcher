@@ -5,7 +5,7 @@
 
 🎯 **Try it live:** [Resume Keyword Matcher](https://resumekeywordmatcher-ck8izh5i2kdeatkwxjjvb2.streamlit.app/)
 <p align="left">
-  <img src="images/resume-keyword-matcher-demo.png" alt="Resume Keyword Matcher Demo" width="450"/>
+  <img src="images/resume-keyword-matcher-demo.png" alt="Resume Keyword Matcher Demo" width="700"/>
 </p>
 
 ---
