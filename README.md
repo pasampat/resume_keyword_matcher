@@ -1,4 +1,4 @@
-# Resume Keyword Matcher
+## Resume Keyword Matcher
 
 *A Python tool to check how well your resume matches a job description using keyword comparison.*
 ---
