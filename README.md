@@ -3,7 +3,7 @@
 *A Python tool to check how well your resume matches a job description using keyword comparison.*
 ---
 
-## 🎯 **Try it live:** [Resume Keyword Matcher](https://resumekeywordmatcher-ck8izh5i2kdeatkwxjjvb2.streamlit.app/)
+# 🎯 **Try it live:** [Resume Keyword Matcher](https://resumekeywordmatcher-ck8izh5i2kdeatkwxjjvb2.streamlit.app/)
 <p align="left">
   <img src="images/resume-keyword-matcher-demo.png" alt="Resume Keyword Matcher Demo" width="700"/>
 </p>
