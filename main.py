@@ -237,8 +237,14 @@ def main():
     """
     print_intro()
     job_path = prompt_filepath("Enter path to the job description (.txt or .pdf)", "test_files/job1.txt")
+    #asking user to input paths for one or more resumes
     resume_paths = prompt_resume_paths()
+    
+    #job_keywords - list of words to be compared. stop words are removed. if nouns/verbs, only nouns/verbs
+    #job_word_counts - how often each word appears in the job description
     job_keywords, job_word_counts = process_job_description(job_path)
+
+    #process_resumes - recleans the text, matches keywords, calculates match %, stores information 
     valid_results = process_resumes(resume_paths, job_keywords, job_word_counts)
 
     if not valid_results:
