@@ -152,7 +152,6 @@ The app will process your files and show results in real‑time, including:
 - **Match Summary Table:**  
   Match percentage, number of matched keywords, and missing keywords for each resume.
 - **Top Gaps Across Resumes**  
-  Expandable lists for each resume, sorted by keyword frequency in the job description.
 - **Keyword Frequency Matrix:**  
   Side‑by‑side table showing how many times each job keyword appears in every resume.
 
