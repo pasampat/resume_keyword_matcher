@@ -65,135 +65,201 @@ def analyze_resume(resume_text, jd_keywords):
     resume_counts = collections.Counter(resume_cleaned)
     return matched, missing, match_percent, resume_counts
 
+
+def analyze_and_render(job_text, resume_texts, resume_labels, mode_label):
+    """
+    Run the full keyword analysis pipeline and render results in the Streamlit app.
+
+    This function takes the job description text and one or more resumes,
+    extracts keywords, and displays:
+      - The job description text (inside an expander).
+      - A summary table showing match %, number of matched keywords,
+        and number of missing keywords for each resume.
+      - Expandable sections for each resume with detailed lists of
+        matched and missing keywords (with frequencies from the JD).
+      - A keyword comparison matrix showing keyword counts across resumes.
+
+    Parameters
+    ----------
+    job_text : str
+        The text of the job description (raw).
+    resume_texts : list[str]
+        A list of resume texts (already extracted from PDF/TXT).
+    resume_labels : list[str]
+        Display labels for each resume (usually filenames).
+    mode_label : str
+        The selected keyword extraction mode label ("All words ..." or "Only nouns/verbs ...").
+
+    """
+   # --- SHOW JOB DESCRIPTION ---
+    with st.expander("Job Description", expanded=False):
+        st.text(job_text if len(job_text) < 5000 else job_text[:5000] + "\n...[truncated]")
+
+    # --- EXTRACT JD KEYWORDS ---
+    jd_mode = "all" if mode_label.startswith("All") else "nouns_verbs"
+    jd_keywords, jd_word_counts = extract_keywords_from_jd(job_text, jd_mode)
+
+    # --- ANALYZE EACH RESUME, SHOW RESUME TEXTS ---
+    summary_rows = []
+    resume_counts_list = []
+    matched_missing_per_resume = []
+
+    for idx, resume_text in enumerate(resume_texts):
+        label = resume_labels[idx] if idx < len(resume_labels) else f"Resume {idx+1}"
+        # Keep full resume text tucked away
+        with st.expander(f"Resume: {label}", expanded=False):
+            st.text(resume_text if len(resume_text) < 5000 else resume_text[:5000] + "\n...[truncated]")
+
+        matched, missing, match_percent, resume_counts = analyze_resume(resume_text, jd_keywords)
+        summary_rows.append({
+            "Resume": label,
+            "Match %": f"{match_percent:.1f}",
+            "#Matched": len(matched),
+            "#Missing": len(missing)
+        })
+        resume_counts_list.append(resume_counts)
+        matched_missing_per_resume.append((matched, missing))
+
+    # --- SUMMARY TABLE ---
+    st.markdown("##### ✅ Resume Match Summary")
+    st.table(summary_rows)
+
+    # --- KEYWORD COMPARISON MATRIX ---
+    data = []
+    sorted_keywords = sorted(jd_keywords, key=lambda w: (-jd_word_counts[w], w))
+    for keyword in sorted_keywords:
+        row = {"Keyword": keyword}
+        for i, counts in enumerate(resume_counts_list):
+            row[resume_labels[i]] = counts.get(keyword, 0)
+        data.append(row)
+    df = pd.DataFrame(data)
+    for col in resume_labels:
+        df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
+
+    st.markdown("##### 📊 Keyword Comparison Matrix")
+    st.dataframe(
+        df,
+        use_container_width=True,
+        height=min(420, 56 + 28 * min(len(df), 10)),  # keep compact; adjust as you like
+    )
+
+    # --- QUICK INSIGHT: Top gaps across resumes ---
+    all_missing_counts = collections.Counter()
+    for matched, missing in matched_missing_per_resume:
+        all_missing_counts.update(missing)
+
+    top_gaps = sorted(
+        all_missing_counts,
+        key=lambda w: (-all_missing_counts[w], -jd_word_counts[w], w)
+    )[:8]
+
+    if top_gaps:
+        st.markdown("##### 🔎 Top gaps across resumes")
+        st.table([
+            {"Keyword": w, "#Resumes without keyword": all_missing_counts[w], "Freq in Job Description": jd_word_counts[w]}
+            for w in top_gaps
+        ])
+
+   
+
+
 # ========== STREAMLIT APP UI ==========
 
-st.subheader("Resume Keyword Matcher")
+st.markdown(
+    """
+    <div style="text-align:center; margin-top: -10px;">
+      <h4>Resume Keyword Matcher</h2>
+      <p style="font-size:16px; margin-bottom: 8px;">
+        <b>Check how well your resume matches a job description using keyword comparison.</b>
+      </p>
+      <div style="display:inline-block; text-align:left; font-size:15px; line-height:1.5;">
+        <ul style="margin: 0; padding-left: 18px;">
+          <li>✅ <b>Match %</b> — quick compatibility score</li>
+          <li>📊 <b>Keyword matrix</b> — side-by-side frequency comparison</li>
+          <li>🔎 <b> Top gaps — what resumes miss most often</li>
+        </ul>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-st.markdown("""
-Upload a job description and 1–3 resumes (PDF or TXT).
-You'll see a summary table and a side-by-side keyword matrix for comparison.
-Matched/missing keywords for each resume can be viewed by expanding the details.
-""")
-
-# ====== SAMPLE DATA SETTINGS ======
-SAMPLE_JOB = "test_files/job1.txt"
+# ====== SAMPLE DATA SETTINGS (robust paths) ======
+from pathlib import Path
+BASE = Path(__file__).parent
+SAMPLE_JOB = str(BASE / "test_files/job1.txt")
 SAMPLE_RESUMES = [
-    "test_files/resume1.pdf",
-    "test_files/resume2.txt",
+    str(BASE / "test_files/resume1.pdf"),
+    str(BASE / "test_files/resume3.txt"),
 ]
 
-# Session state to remember sample/demo button usage
+# ====== SESSION STATE ======
+# Tracks whether we've already shown the auto demo this session
+if "auto_demo_ran" not in st.session_state:
+    st.session_state["auto_demo_ran"] = False
+
+# (Optional legacy flag you had; safe to keep but unused by the new flow)
 if "use_samples" not in st.session_state:
     st.session_state["use_samples"] = False
 
-# Button for user to load sample/demo data
-if st.button("Use Sample Data (for demo/testing)", help="See a demo with example files!"):
-    st.session_state["use_samples"] = True
+# ====== KEYWORD MODE (simplified label + tooltip) ======
+mode = st.radio(
+    "How keywords are chosen",
+    ["All words (default)", "Only nouns/verbs (recommended)"],
+    help="Choose whether to consider all words or only nouns/verbs (often better for job relevance)."
+)
 
-# --- DATA INPUTS: handle both sample and uploaded files ---
-if st.session_state["use_samples"]:
-    # Load from repo/sample files
-    job_text = read_sample_file(SAMPLE_JOB)
-    resume_texts = [read_sample_file(p) for p in SAMPLE_RESUMES]
-    resume_labels = [os.path.basename(p) for p in SAMPLE_RESUMES]
-    st.info(
-        "Sample data loaded! (1 Job Description TXT + 1 PDF resume + 1 TXT resume).\n "
-        "Click **Analyze** below to see a demo."
-    )
+# ====== INSTANT DEMO ON FIRST LOAD ======
+if not st.session_state["auto_demo_ran"]:
+    # Load samples and render immediately so viewers see results without any clicks
+    job_text_demo = read_sample_file(SAMPLE_JOB)
+    resume_texts_demo = [read_sample_file(p) for p in SAMPLE_RESUMES]
+    resume_labels_demo = [os.path.basename(p) for p in SAMPLE_RESUMES]
+
+    st.success("Showing demo with sample data.")
+    analyze_and_render(job_text_demo, resume_texts_demo, resume_labels_demo, mode)
+    st.session_state["auto_demo_ran"] = True
 else:
-    # Upload widgets
+    # Let users quickly re-run the demo after trying uploads or changing mode
+    if st.button("Replay Demo with Sample Data"):
+        job_text_demo = read_sample_file(SAMPLE_JOB)
+        resume_texts_demo = [read_sample_file(p) for p in SAMPLE_RESUMES]
+        resume_labels_demo = [os.path.basename(p) for p in SAMPLE_RESUMES]
+        analyze_and_render(job_text_demo, resume_texts_demo, resume_labels_demo, mode)
+
+# ====== USER UPLOADS (de-emphasized in an expander) ======
+with st.expander("🔽 Try with your own files"):
     job_file = st.file_uploader(
-        "Upload Job Description (.txt or .pdf)",
+        "Upload Job Description",
         type=["txt", "pdf"],
-        key="jobdesc"
+        help="Accepted formats: .txt, .pdf",
+        key="jobdesc",
     )
     resume_files = st.file_uploader(
-        "Upload 1 to 3 Resumes (.txt or .pdf)",
+        "Upload 1–3 Resumes",
         type=["txt", "pdf"],
         accept_multiple_files=True,
-        key="resumes"
+        help="Accepted formats: .txt, .pdf",
+        key="resumes",
     )
-    # For uploaded files, extract text and make labels
+
+    # Extract text + labels from uploads
     job_text = read_uploaded_file(job_file) if job_file else None
     resume_texts = [read_uploaded_file(f) for f in resume_files] if resume_files else []
     resume_labels = [f.name for f in resume_files] if resume_files else []
 
-# ====== MODE SELECTOR ======
-mode = st.radio(
-    "Keyword extraction mode",
-    ["All words (default)", "Only nouns/verbs (recommended for most jobs)"]
-)
+    # Run analysis on user data
+    if st.button("Analyze"):
+        if not job_text:
+            st.error("Please upload a job description.")
+        elif not resume_texts:
+            st.error("Please upload at least one resume.")
+        elif len(resume_texts) > 3:
+            st.error("Please upload no more than 3 resumes.")
+        else:
+            analyze_and_render(job_text, resume_texts, resume_labels, mode)
 
-# ====== ANALYZE BUTTON LOGIC ======
-if st.button("Analyze"):
-    # --- Validation ---
-    if not job_text:
-        st.error("Please upload a job description or use the sample data.")
-    elif not resume_texts or len(resume_texts) == 0:
-        st.error("Please upload at least one resume or use the sample data.")
-    elif len(resume_texts) > 3:
-        st.error("Please upload no more than 3 resumes.")
-    else:
-        # --- SHOW JOB DESCRIPTION ---
-        with st.expander("Job Description", expanded=False):
-            st.text(job_text if len(job_text) < 5000 else job_text[:5000] + "\n...[truncated]")
 
-        # --- EXTRACT JD KEYWORDS ---
-        jd_mode = "all" if mode.startswith("All") else "nouns_verbs"
-        jd_keywords, jd_word_counts = extract_keywords_from_jd(job_text, jd_mode)
-
-        # --- ANALYZE EACH RESUME, SHOW RESUME TEXTS ---
-        summary_rows = []
-        resume_counts_list = []
-        matched_missing_per_resume = []
-
-        for idx, resume_text in enumerate(resume_texts):
-            # Show resume text in expander, label by file name or "Resume 1"
-            label = resume_labels[idx] if idx < len(resume_labels) else f"Resume {idx+1}"
-            with st.expander(f"Resume: {label}", expanded=False):
-                st.text(resume_text if len(resume_text) < 5000 else resume_text[:5000] + "\n...[truncated]")
-            # Analyze
-            matched, missing, match_percent, resume_counts = analyze_resume(resume_text, jd_keywords)
-            summary_rows.append({
-                "Resume": label,
-                "Match %": f"{match_percent:.1f}",
-                "#Matched": len(matched),
-                "#Missing": len(missing)
-            })
-            resume_counts_list.append(resume_counts)
-            matched_missing_per_resume.append((matched, missing))
-
-        # --- SUMMARY TABLE ---
-        st.markdown("##### Resume Match Summary")
-        st.table(summary_rows)
-
-        # --- MATCHED/MISSING DETAILS FOR EACH RESUME ---
-        for idx, label in enumerate(resume_labels):
-            matched, missing = matched_missing_per_resume[idx]
-            st.markdown(f"##### Matched & Missing Keywords for {label}")
-            with st.expander(f"View matched and missing keywords for {label}", expanded=False):
-                matched_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]}
-                                 for w in sorted(matched, key=lambda x: (-jd_word_counts[x], x))]
-                missing_table = [{"Keyword": w, "Frequency in JD": jd_word_counts[w]}
-                                 for w in sorted(missing, key=lambda x: (-jd_word_counts[x], x))]
-                st.markdown("**Matched Keywords**")
-                st.table(matched_table if matched_table else [{"Keyword": "None", "Frequency in JD": "-"}])
-                st.markdown("**Missing Keywords**")
-                st.table(missing_table if missing_table else [{"Keyword": "None", "Frequency in JD": "-"}])
-
-        # --- KEYWORD COMPARISON MATRIX ---
-        data = []
-        sorted_keywords = sorted(jd_keywords, key=lambda w: (-jd_word_counts[w], w))
-        for keyword in sorted_keywords:
-            row = {"Keyword": keyword}
-            for i, counts in enumerate(resume_counts_list):
-                row[resume_labels[i]] = counts.get(keyword, 0)
-            data.append(row)
-        df = pd.DataFrame(data)
-        for col in resume_labels:
-            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
-        st.markdown("##### Keyword Comparison Matrix")
-        st.dataframe(df, use_container_width=True)
 
 # For devs/users: show reminder
 st.markdown("""
