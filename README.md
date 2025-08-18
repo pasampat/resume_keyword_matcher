@@ -16,7 +16,7 @@ Landing an interview often depends on using the right keywords.
 The **Resume Keyword Matcher** takes the guesswork out of resume tailoring:
 
 - **Upload a job description** and up to **three resumes** (PDF or TXT).  
-- Instantly see **keyword matches**, **missing terms**, and an **overall match percentage**.  
+- Instantly see **keyword matches**, **top gaps across resumes**, and an **overall match percentage**.  
 - Explore a **keyword frequency matrix** to compare resumes side by side.  
 
 This tool makes it easy for job seekers to **optimize resumes for specific postings** and improve their chances of getting noticed.
@@ -25,7 +25,7 @@ This tool makes it easy for job seekers to **optimize resumes for specific posti
 
 - **Upload & Compare Resumes:** Upload **1–3 resumes** and a **job description** (PDF or TXT).  
 - **Instant Keyword Analysis:** View **match percentage, matched keywords, and missing keywords** for each resume.  
-- **Keyword Frequency Matrix:** Compare **how often each job keyword appears** in each resume.  
+- Top Gaps Across Resumes: Instantly see which important job keywords are missing most often  
 - **Sample Data Demo:** Use built-in **sample resumes and job descriptions** for instant testing.  
 - **Flexible Keyword Extraction:** Choose between **all keywords** or **nouns/verbs only** to focus on skills and actions.  
 - **Interactive Streamlit UI:** Expandable previews, scrollable tables, and **real-time results**.  
@@ -118,7 +118,7 @@ This project includes **sample files** to make it easy to try the app without up
 **Included in `test_files/`:**
 - **Job Description:**  
   A sample job posting used to extract target keywords.
-- **Resume 1 (PDF)** and **Resume 2 (TXT):**  
+- **Resume 1 (PDF)** and **Resume 3 (TXT):**  
   Example resumes that might apply to the sample job.
 
 **How It Works:**
@@ -126,7 +126,7 @@ This project includes **sample files** to make it easy to try the app without up
   allowing you to instantly see **matched and missing keywords** in the analysis.
 - Click **“Use Sample Data”** in the app to:
   1. Automatically load the sample job description and both resumes.
-  2. Generate the **match summary**, **keyword lists**, and **comparison matrix** without uploading anything.
+  2. Generate the **match summary**, **top gaps across resumes**, and **comparison matrix** without uploading anything.
 
 **Tip:**  
 Sample data is perfect for **first‑time users**, demos, or testing new features.
@@ -151,7 +151,7 @@ The app will process your files and show results in real‑time, including:
 
 - **Match Summary Table:**  
   Match percentage, number of matched keywords, and missing keywords for each resume.
-- **Matched & Missing Keywords:**  
+- **Top Gaps Across Resumes**  
   Expandable lists for each resume, sorted by keyword frequency in the job description.
 - **Keyword Frequency Matrix:**  
   Side‑by‑side table showing how many times each job keyword appears in every resume.
